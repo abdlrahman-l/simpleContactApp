@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View} from 'react-native';
-import Navigator from './simpleListChat/routes/listChatStack';
+import Navigator from './simpleListChat/routes/drawer';
 import * as Font from 'expo-font';
 import {AppLoading} from 'expo';
 import { connect } from 'react-redux';
@@ -15,7 +15,6 @@ const getFonts = () => Font.loadAsync({
   'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf')
 })
 export default function App() {
-  
   const [fontsLoaded,setFontsLoaded] = useState(false);
   if (fontsLoaded){
     return (

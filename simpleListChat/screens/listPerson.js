@@ -1,27 +1,54 @@
 import React, {useState, Component} from 'react';
-import { StyleSheet, Text, View,Image , FlatList} from 'react-native';
+import { StyleSheet, Text, View,Image , FlatList, ActivityIndicator, PixelRatio} from 'react-native';
 import ChatMe from '../components/chatMe';
 import { connect } from 'react-redux';
 import { changeProfile } from '../actions/changeProfile';
 import { bindActionCreators } from 'redux';
+class ListPerson extends Component{
+  constuctor(props) {
 
-function ListPerson({navigation,profile}) {
+  }
   
-    const pressHandler = (item) => {
-        navigation.navigate('PersonDetails',item);
+  fetchFromService = () => {
+    fetch('https://my-json-server.typicode.com/abdlrahman-l/myservice/db')
+    .then(response => response.json())
+    .then(json => {
+      this.props.changeProfile(json.profile);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+  
+  componentDidMount(){
+    this.fetchFromService();
+  }
+  pressHandler = (item) => {
+    this.props.navigation.navigate('PersonDetails',item);
+  }
+    render(){
+      if (this.props.profile.profile){
+        return (
+          <View style={styles.container}>
+              <FlatList
+                data={this.props.profile.profile}
+                renderItem={({item,index}) => (
+                  <ChatMe item={item} index={index} pressHandler={() => this.pressHandler(item)} />
+               )}
+              />
+          </View>
+        );
+      } 
+      else {
+        return (
+          <View style={[styles.container, styles.horizontal]}>
+            <ActivityIndicator size="small" color='#fff3cd'/>
+          </View>
+        );
+      }
+      
     }
-   
-    return (
-      <View style={styles.container}>
-          <FlatList
-            data={profile.profile}
-            renderItem={({item,index}) => (
-              <ChatMe item={item} index={index} pressHandler={pressHandler} />
-           )}
-          />
-          {console.log(profile)}
-      </View>
-    );
+    
 }
 
 const mapStateToProps = state => ({
@@ -29,9 +56,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeProfile: profile => dispatch(changeProfile(profile)),
+  // changeProfile: profile => dispatch(changeProfile(profile)),
+  changeProfile: bindActionCreators(changeProfile,dispatch),
 });
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -39,6 +66,11 @@ const mapDispatchToProps = dispatch => ({
       backgroundColor: '#4d3e3e',
       alignItems: 'stretch',
       padding: 10,
+    },
+    horizontal: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      padding: 10
     }
   });
   

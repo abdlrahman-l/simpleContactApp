@@ -116,7 +116,6 @@ function PersonDetails({navigation,profile,changeProfile}){
              <Card flex={4} Component={RenderImageContainer} />
              <Card flex={1} Component={DescComponent}/>
              <Card flex={2} Component={DescComponent2}/>
-             {console.log(profile)}
         </KeyboardAvoidingView>
     );
 }
